@@ -21,10 +21,15 @@ function SalesCard() {
 
 
     useEffect(() => {
-        axios.get(`${BASE_URL}/sales`).then(res => {
+
+
+        const dmin = dataMinima.toISOString().slice(0,10);
+        const dmax = dataMaxima.toISOString().slice(0,10);
+
+        axios.get(`${BASE_URL}/sales?minDate=${dmin}&maxDate=${dmax}`).then(res => {
             setSales(res.data.content);
         })
-    }, []);
+    }, [dataMinima, dataMaxima]);
 
     return (
         <>
@@ -67,14 +72,14 @@ function SalesCard() {
                                 return (
                                     <tr key={sale.id}>
                                         <td className="show992">{sale.id}</td>
-                                        <td className="show576">{sale.date}</td>
+                                        <td className="show576">{new Date(sale.date).toLocaleDateString()}</td>
                                         <td>{sale.sellerName}</td>
                                         <td className="show992">{sale.visited}</td>
                                         <td className="show992">{sale.deals}</td>
                                         <td>R$ {sale.amount.toFixed(2)}</td>
                                         <td>
                                             <div className="dsmeta-red-btn-container">
-                                                <NotificationButton />
+                                                <NotificationButton saleId={sale.id}/>
                                             </div>
                                         </td>
                                     </tr>
